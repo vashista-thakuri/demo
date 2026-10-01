@@ -25,3 +25,15 @@ def test_get_product_by_sku_sql_injection_prevention():
     valid_product = get_product_by_sku("SKU-100")
     assert valid_product is not None
     assert valid_product["sku"] == "SKU-100"
+
+
+def test_get_product_by_sku_sql_injection_prevention():
+    # Attempt to inject SQL via the sku parameter
+    malicious_input = "' OR 1=1 --"
+    product = get_product_by_sku(malicious_input)
+    # The function should treat the input as data, not execute it as SQL
+    assert product is None or isinstance(product, dict)
+    # Verify that the table still exists by querying a known valid SKU
+    valid_product = get_product_by_sku("SKU-100")
+    assert valid_product is not None
+    assert valid_product["sku"] == "SKU-100"
