@@ -13,3 +13,11 @@ def test_get_product_by_sku_unknown_sku_returns_none():
     product = get_product_by_sku("no-such-sku")
 
     assert product is None
+
+
+def test_sql_injection_attempt_prevented():
+    malicious_sku = "' OR '1'='1" 
+    product = get_product_by_sku(malicious_sku)
+    
+    # Verify that the malicious input does not return unintended products
+    assert product is None
